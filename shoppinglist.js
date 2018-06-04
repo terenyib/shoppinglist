@@ -4,7 +4,7 @@ M = (function () {
     var lista = [];
     function storeData() {
         if (window.localStorage) {
-            window.localStorage.setItem("lista", JSON.stringify(lista));
+            window.localStorage.setItem('lista', JSON.stringify(lista));
         }
     }
 
@@ -28,15 +28,15 @@ M = (function () {
             if (i !== -1) { lista[i].checked = !lista[i].checked; }
             storeData();
         }
-    }
+    };
 })();
 
 V = (function () {
     function ujTermekTorlesGomb() {
-        var myNodelist = document.getElementsByTagName("li");
-        var span = document.createElement("SPAN");
-        var txt = document.createTextNode("x");
-        span.className = "eltavolitgomb";
+        var myNodelist = document.getElementsByTagName('li');
+        var span = document.createElement('SPAN');
+        var txt = document.createTextNode('x');
+        span.className = 'eltavolitgomb';
         span.appendChild(txt);
         myNodelist[myNodelist.length - 1].appendChild(span);
     }
@@ -67,10 +67,10 @@ V = (function () {
 
         termekKihuzas: function (elem) {
             var item = document.getElementById(elem);
-            if (item.style.textDecoration == "line-through") {
-                item.style.textDecoration = "none";
+            if (item.style.textDecoration == 'line-through') {
+                item.style.textDecoration = 'none';
             } else {
-                item.style.textDecoration = "line-through";
+                item.style.textDecoration = 'line-through';
             }
         },
     };
@@ -114,7 +114,7 @@ C = (function (MObj, VObj) {
                 if (savedLista) {
                     var tempLista = JSON.parse(savedLista);
                     tempLista.forEach(element => {
-                        termekHozzaadas(element.text)
+                        termekHozzaadas(element.text);
                         if (element.checked) {
                             termekAthuzas(element.text);
                         }
@@ -122,11 +122,11 @@ C = (function (MObj, VObj) {
                 }
             }
             document.getElementById('hozzaadgomb').addEventListener('click', termekEllenorzes);
-            document.getElementById("bevasarlolista").addEventListener("click", function (e) {
-                if (e.target && e.target.matches("li.termek")) {
+            document.getElementById('bevasarlolista').addEventListener('click', function (e) {
+                if (e.target && e.target.matches('li.termek')) {
                     termekAthuzas(e.target.id);
                 }
-                if (e.target && e.target.matches("span")) {
+                if (e.target && e.target.matches('span')) {
                     termekTorles(e.target.parentElement.id);
                 }
             });
