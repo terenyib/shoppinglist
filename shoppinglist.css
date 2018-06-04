@@ -45,12 +45,6 @@ ul li:hover {
     background: #ddd;
 }
 
-ul li.checked {
-    background: #888;
-    color: #fff;
-    text-decoration: line-through;
-}
-
 .eltavolitgomb {
     position: absolute;
     right: 0;
