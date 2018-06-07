@@ -17,7 +17,7 @@ M = (function () {
         },
 
         deleteItem: function (d) {
-            lista.splice(this.searchItem(d), 1);           
+            lista.splice(this.searchItem(d), 1);
             storeData();
         },
 
@@ -153,7 +153,7 @@ C = (function (MObj, VObj) {
                 var key = e.which || e.keyCode;
                 if (key === 13) { termekEllenorzes(); }
             });
-        },
+        }
     };
 })(M, V);
 
