@@ -9,7 +9,7 @@
 }
 
 #lista {
-	width: 300px;        
+    width: 300px;       
 }
 
 h1 {
@@ -31,8 +31,7 @@ ul li {
     cursor: pointer;
     position: relative;
     padding: 12px 40px 12px 25px;
-    background: #eee;
-    font-size: 18px;
+    background: #eee;    
     transition: 0.2s;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -78,15 +77,25 @@ input {
     font-size: 16px;    
 }
 
-#hozzaadgomb {
-    padding: 10px;
-    width: 35%;
-    background: #00FF7F;
-    float: left;    
+.gomb {
+    padding: 10px;    
+    color: white;
+    background: #4fd17f;
+    text-align: center;
+    float: left;
+    cursor: pointer;    
 }
 
-#hozzaadgomb:hover {
-    background-color: #00b300;
+.gomb:hover {
+    background-color: #339256;;
+}
+
+#hozzaadgomb {
+    width: 35%;
+}
+
+#listatorles {
+    width: inherit;
 }
 
 #bevasarlolista{

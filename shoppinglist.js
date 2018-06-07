@@ -28,7 +28,7 @@ M = (function () {
             var i = this.searchItem(d);
             if (i !== -1) { lista[i].checked = !lista[i].checked; }
             storeData();
-        }
+        },
     };
 })();
 
@@ -62,6 +62,7 @@ V = (function () {
         termekEltavolitas: function (elem) {
             var i = document.getElementById(elem);
             i.parentNode.removeChild(i);
+            if (document.getElementById('kihuzottlista').getElementsByTagName('li').length < 1) { document.getElementById('listatorles').style.display = 'none'; }
         },
 
         termekKihuzas: function (elem) {
@@ -70,12 +71,21 @@ V = (function () {
             if (item.style.textDecoration == 'line-through') {
                 item.style.textDecoration = 'none';
                 celLista = 'bevasarlolista';
+                if (document.getElementById('kihuzottlista').getElementsByTagName('li').length < 2) { document.getElementById('listatorles').style.display = 'none'; }
             } else {
                 item.style.textDecoration = 'line-through';
                 celLista = 'kihuzottlista';
+                document.getElementById('listatorles').style.display = 'inline';
             }
             item.parentNode.removeChild(item);
             document.getElementById(celLista).appendChild(item);
+        },
+
+        kihuzottTermekek: function () {
+            var kihuzottElemek = document.getElementById('kihuzottlista').getElementsByTagName('li');
+            var tombkihuzottak = [];
+            for (var i = 0; i < kihuzottElemek.length; i++) { tombkihuzottak[i] = kihuzottElemek[i].id; }
+            return tombkihuzottak;
         },
     };
 })();
@@ -87,12 +97,8 @@ C = (function (MObj, VObj) {
             var vanMar = MObj.searchItem(termeknev);
             if (vanMar === -1) {
                 termekHozzaadas(termeknev);
-            } else {
-                alert('Ez a termék már szerepel a listán!');
-            }
-        } else {
-            alert('Nem írtál be terméket!');
-        }
+            } else { alert('Ez a termék már szerepel a listán!'); }
+        } else { alert('Nem írtál be terméket!'); }
         VObj.bevitelimezoTorles();
     }
 
@@ -109,6 +115,12 @@ C = (function (MObj, VObj) {
     function termekAthuzas(termek) {
         MObj.changeItem(termek);
         VObj.termekKihuzas(termek);
+    }
+
+    function listaTorles() {        
+        VObj.kihuzottTermekek().forEach(element => {
+            termekTorles(element);            
+        });
     }
 
     var listaKatt = function (e) {
@@ -128,20 +140,19 @@ C = (function (MObj, VObj) {
                     var tempLista = JSON.parse(savedLista);
                     tempLista.forEach(element => {
                         termekHozzaadas(element.text);
-                        if (element.checked) {
-                            termekAthuzas(element.text);
-                        }
+                        if (element.checked) { termekAthuzas(element.text); }
                     });
                 }
             }
             document.getElementById('hozzaadgomb').addEventListener('click', termekEllenorzes);
+            document.getElementById('listatorles').addEventListener('click', listaTorles);
             document.getElementById('bevasarlolista').addEventListener('click', listaKatt);
             document.getElementById('kihuzottlista').addEventListener('click', listaKatt);
             document.addEventListener('keypress', function (e) {
                 var key = e.which || e.keyCode;
                 if (key === 13) { termekEllenorzes(); }
             });
-        }
+        },
     };
 })(M, V);
 
