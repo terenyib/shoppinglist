@@ -88,3 +88,9 @@ input {
 #hozzaadgomb:hover {
     background-color: #00b300;
 }
+
+#bevasarlolista{
+    border-bottom-color: #6495ED;
+    border-bottom-style: solid;
+    border-bottom-width: 2px;
+}
