@@ -17,9 +17,7 @@ M = (function () {
         },
 
         deleteItem: function (d) {
-            lista.splice(this.searchItem(d), 1);
-            console.log(lista);
-            
+            lista.splice(this.searchItem(d), 1);           
             storeData();
         },
 
