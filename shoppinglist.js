@@ -3,9 +3,7 @@ var M, V, C;
 M = (function () {
     var lista = [];
     function storeData() {
-        if (window.localStorage) {
-            window.localStorage.setItem('lista', JSON.stringify(lista));
-        }
+        if (window.localStorage) { window.localStorage.setItem('lista', JSON.stringify(lista)); }
     }
 
     return {
@@ -15,20 +13,32 @@ M = (function () {
         },
 
         searchItem: function (d) {
-            //return lista.map(c => c.text).indexOf(d);
             return lista.findIndex(c => c.text === d);
         },
 
         deleteItem: function (d) {
             lista.splice(this.searchItem(d), 1);
+            console.log(lista);
+            
             storeData();
         },
 
         changeItem: function (d) {
             var i = this.searchItem(d);
-            if (i !== -1) { lista[i].checked = !lista[i].checked; }
-            storeData();
+            if (i !== -1) {
+                lista[i].checked = !lista[i].checked;
+                storeData();
+                return lista[i];
+            } else { return null; }
         },
+
+        checkedItems: function () {
+            var result = [];
+            lista.forEach(c => {
+                if (c.checked) { result.push(c.text); }
+            });
+            return result;
+        }
     };
 })();
 
@@ -59,34 +69,29 @@ V = (function () {
             ujTermekTorlesGomb(li);
         },
 
-        termekEltavolitas: function (elem) {
+        termekEltavolitas: function (elem, checkedList) {
             var i = document.getElementById(elem);
             i.parentNode.removeChild(i);
-            if (document.getElementById('kihuzottlista').getElementsByTagName('li').length < 1) { document.getElementById('listatorles').style.display = 'none'; }
+            if (checkedList.length < 1) { document.getElementById('listatorles').style.display = 'none'; }
         },
 
-        termekKihuzas: function (elem) {
-            var item = document.getElementById(elem);
-            var celLista;
-            if (item.style.textDecoration == 'line-through') {
-                item.style.textDecoration = 'none';
-                celLista = 'bevasarlolista';
-                if (document.getElementById('kihuzottlista').getElementsByTagName('li').length < 2) { document.getElementById('listatorles').style.display = 'none'; }
-            } else {
-                item.style.textDecoration = 'line-through';
-                celLista = 'kihuzottlista';
-                document.getElementById('listatorles').style.display = 'inline';
+        termekKihuzas: function (listItem, checkedList) {
+            if (listItem) {
+                var item = document.getElementById(listItem.text);
+                var celLista;
+                if (!listItem.checked) {
+                    item.style.textDecoration = 'none';
+                    celLista = 'bevasarlolista';
+                    if (checkedList.length < 2) { document.getElementById('listatorles').style.display = 'none'; }
+                } else {
+                    item.style.textDecoration = 'line-through';
+                    celLista = 'kihuzottlista';
+                    document.getElementById('listatorles').style.display = 'inline';
+                }
+                item.parentNode.removeChild(item);
+                document.getElementById(celLista).appendChild(item);
             }
-            item.parentNode.removeChild(item);
-            document.getElementById(celLista).appendChild(item);
-        },
-
-        kihuzottTermekek: function () {
-            var kihuzottElemek = document.getElementById('kihuzottlista').getElementsByTagName('li');
-            var tombkihuzottak = [];
-            for (var i = 0; i < kihuzottElemek.length; i++) { tombkihuzottak[i] = kihuzottElemek[i].id; }
-            return tombkihuzottak;
-        },
+        }
     };
 })();
 
@@ -109,17 +114,16 @@ C = (function (MObj, VObj) {
 
     function termekTorles(termek) {
         MObj.deleteItem(termek);
-        VObj.termekEltavolitas(termek);
+        VObj.termekEltavolitas(termek, MObj.checkedItems());
     }
 
     function termekAthuzas(termek) {
-        MObj.changeItem(termek);
-        VObj.termekKihuzas(termek);
+        VObj.termekKihuzas(MObj.changeItem(termek), MObj.checkedItems());
     }
 
-    function listaTorles() {        
-        VObj.kihuzottTermekek().forEach(element => {
-            termekTorles(element);            
+    function listaTorles() {
+        MObj.checkedItems().forEach(element => {
+            termekTorles(element);
         });
     }
 
@@ -127,7 +131,7 @@ C = (function (MObj, VObj) {
         if (e.target && e.target.matches('li.termek')) {
             termekAthuzas(e.target.id);
         }
-        if (e.target && e.target.matches('span')) {
+        if (e.target && e.target.matches('span.eltavolitgomb')) {
             termekTorles(e.target.parentElement.id);
         }
     };
@@ -146,8 +150,7 @@ C = (function (MObj, VObj) {
             }
             document.getElementById('hozzaadgomb').addEventListener('click', termekEllenorzes);
             document.getElementById('listatorles').addEventListener('click', listaTorles);
-            document.getElementById('bevasarlolista').addEventListener('click', listaKatt);
-            document.getElementById('kihuzottlista').addEventListener('click', listaKatt);
+            document.getElementById('lista').addEventListener('click', listaKatt);
             document.addEventListener('keypress', function (e) {
                 var key = e.which || e.keyCode;
                 if (key === 13) { termekEllenorzes(); }
